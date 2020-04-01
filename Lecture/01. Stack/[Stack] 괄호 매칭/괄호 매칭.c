@@ -15,7 +15,7 @@ int check_matching(const char* input) {
         switch (ch) {
         case '(': case '{': case '[':
             push(&s, ch);
-            print_stack(&s, input + (i + 1));
+            print_stack(&s, input + (i + 1));   // * input + (i + 1) 은 input[i] 이후의 문자를 모두 출력
             break;
 
         case ')': case '}': case ']':
