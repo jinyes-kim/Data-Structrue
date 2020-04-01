@@ -2,12 +2,12 @@
 #include <stdlib.h>
 
 /*
-µ¿Àû ¹è¿­ ½ºÅÃ
+ë™ì  ë°°ì—´ ìŠ¤íƒ
 
-¹è¿­ÀÇ »çÀÌÁî¸¦ µ¿ÀûÀ¸·Î ÇÒ´çÇÏ°í, ¹è¿­ÀÌ ²Ë Â÷¸é
-realloc ÇÔ¼ö¸¦ ÅëÇØ ¹è¿­ÀÇ Å©±â¸¦ º¯°æ ½ÃÅ²´Ù.
+ë°°ì—´ì˜ ì‚¬ì´ì¦ˆë¥¼ ë™ì ìœ¼ë¡œ í• ë‹¹í•˜ê³ , ë°°ì—´ì´ ê½‰ ì°¨ë©´
+realloc í•¨ìˆ˜ë¥¼ í†µí•´ ë°°ì—´ì˜ í¬ê¸°ë¥¼ ë³€ê²½ ì‹œí‚¨ë‹¤.
 
-realloc(±âÁ¸ ¹è¿­, º¯°æÇÒ Å©±â)
+realloc(ê¸°ì¡´ ë°°ì—´, ë³€ê²½í•  í¬ê¸°)
 
 */
 
@@ -42,7 +42,7 @@ int main(void) {
 
 void init_stack(stackType* s) {
     s->top = -1;
-    s->capacity = 8;    // Ã³À½ ¹è¿­ÀÇ Å©±â´Â 8
+    s->capacity = 8;    // ì²˜ìŒ ë°°ì—´ì˜ í¬ê¸°ëŠ” 8
     s->stack = (element*)malloc(sizeof(element) * s->capacity);
 }
 
@@ -57,12 +57,12 @@ int is_empty(stackType* s) {
 void push(stackType* s, element item) {
     if (is_full(s)) {
         /*
-        realloc ÇÔ¼ö·Î ¹è¿­ÀÇ Å©±â¸¦ È®ÀåÇÑ´Ù. 
-        ÆÄ¶ó¹ÌÅÍ ¿É¼Ç
-        ±âÁ¸ ¹è¿­, º¯°æÇÒ Å©±â
+        realloc í•¨ìˆ˜ë¡œ ë°°ì—´ì˜ í¬ê¸°ë¥¼ í™•ìž¥í•œë‹¤. 
+        íŒŒë¼ë¯¸í„° ì˜µì…˜
+        ê¸°ì¡´ ë°°ì—´, ë³€ê²½í•  í¬ê¸°
         */
         s->capacity *= 2;
-        s->stack = realloc(s->stack, s->capacity * sizeof(element));
+        s->stack = (element*)realloc(s->stack, s->capacity * sizeof(element));
         printf("%d\n", s->capacity);
     }
     s->stack[++(s->top)] = item;
