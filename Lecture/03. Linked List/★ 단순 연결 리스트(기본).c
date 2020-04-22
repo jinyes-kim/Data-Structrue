@@ -24,7 +24,7 @@ ListNode* get_last_node(ListNode* head) {
 ListNode* insert_first(ListNode* head, element data) {
     ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
     tmp->data = data;
-    if (head->data == NULL) {
+    if (head == NULL) {
         tmp->link = NULL;
         head = tmp;
         return head;
@@ -37,7 +37,7 @@ ListNode* insert_first(ListNode* head, element data) {
 ListNode* insert(ListNode* head, ListNode* pre, element data) {
     ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
     tmp->data = data;
-    if (head->data == NULL) {
+    if (head == NULL) {
         tmp->link = NULL;
         head = tmp;
         return head;
@@ -110,9 +110,9 @@ int main(void) {
     
     // 변수 초기화 잊지 않기
     // 초기화 하지 않으면 메모리 읽기 액세스 위반 에러가 난다.
-    list1->data = NULL, list1->link = NULL;
-    list2->data = NULL, list2->link = NULL;
-    list3->data = NULL, list3->link = NULL;
+    list1= NULL;
+    list2= NULL;
+    list3= NULL;
 
 
     list1 = insert_first(list1, 1);
@@ -131,7 +131,7 @@ int main(void) {
 
 
     // func test - search_node
-    printf("%d", search_node(list3, 5)->data);
+    printf("serach node -> %d", search_node(list3, 5)->data);
 
     return 0;
 }
