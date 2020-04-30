@@ -1,100 +1,129 @@
 #include <stdio.h>
 #include <stdlib.h>
-# define MAX 5
+
 /*
-선형 큐
+기본 연결 리스트 (헤더, 양방향)
 
-큐는 배열을 사용하는 자료구조
+노드(구조체) -> 노드(구조체) -> 노드(구조체)...
+와 같은 구조
 
-따라서 구조체가 큐의 그릇이다.
-그릇 안의 배열에서 데이터를 넣다 뺐다. 한다.
-그 위치를 알려주는 게 구조체에 있는
-front와 rear
+그리고 위와 같은 연결 리스트의 헤드와 테일 노드의
+주소를 갖는 헤더 타입 구조체
 
 */
 typedef int element;
 
-typedef struct QueueType {
-    element data[MAX];
-    int front, rear;
-} QueueType;
+typedef struct ListNode {
+    element data;
+    struct ListNode* llink;
+    struct ListNode* rlink;
+} ListNode;
+
+typedef struct ListType {
+    ListNode* head;
+    ListNode* tail;
+    int size;
+} ListType;
 
 void error(char* msg) {
     fprintf(stderr, "%s\n", msg);
     exit(1);
 }
 
-void init_queue(QueueType* q) {
-    q->front = 0;
-    q->rear = 0;
+int is_empty(ListType* head) {
+    return (head->head == NULL);
 }
 
-int is_full(QueueType* q) {
-    return (q->rear + 1 == MAX);
-}
-
-int is_empty(QueueType* q) {
-    return (q->rear == 0);
-}
-
-void enqueue(QueueType* q, element item) {
-    if (is_full(q)) {
-        return error("Overflow");
-    }
-    if (is_empty(q)) {
-        q->data[0] = item;
-    }
-    else {
-        q->data[q->rear] = item;
-    }
-    q->rear++;
-}
-
-element dequeue(QueueType* q) {
-    if (is_empty(q)) error("Underflow");
-
-    // 큐는 first in first out
-    // [] [] [] [] [] []
-    element res = q->data[q->front];
-    q->front += 1;
-    return res;
+// *초기화 함수
+// 해당 구조체를 초기화 하고 할당해주는 용도
+ListType* init_link() {
+    ListType* head = (ListType*)malloc(sizeof(ListType));
+    // head = NULL 때려버리면 밑에서 필드에 접근 자체가 불가능하다. 주의하기
+    head->tail = NULL;
+    head->head = NULL;
+    head->size = 0;
+    return head;
 
     /*
-    해당 구조는 디큐를 하면 front로 눈속임을 하므로 배열에서
-    요소가 진짜로 사라지지는 않는다.
-
+    헤더를 사용하지 않고 노드를 초기화해주는 함수라면
+    head = NULL 과 같은 형태로 접근해야 할 듯
     */
 }
 
-void print_queue(QueueType* q) {
-    if (is_empty(q)) error("empty queue");
-    for (int i = q->front; i < q->rear; i++) {
-        if (q->front == i) printf("-> ");
-        printf("%d ", q->data[i]);
+void insert_last(ListType* head, element item) {
+    // 추가할 새로운 노드를 동적할당 한다.
+    ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
+
+    tmp->data = item; tmp->rlink = NULL;
+
+    // case1 head is NULL
+    if (head->tail == NULL) {
+        tmp->llink = NULL;
+        head->tail = tmp;
+        head->head = tmp;
+        head->size++;
+        return;
     }
+    // case2 head is not NULL
+    ListNode* ptr = head->head;
+    while (ptr->rlink != NULL) {
+        ptr = ptr->rlink;
+    }
+    ptr->rlink = tmp;
+    tmp->llink = ptr;
+    //tmp->rlink = head->head;
+    head->tail = tmp;
+    head->size++;
+}
+
+void remove_last(ListType* head) {
+    // case1 delete last one
+    if (head->size == 1) {
+        head->head = NULL; head->tail == NULL;  // 헤더의 헤드와 테일 초기화
+        head->size--;
+        return;
+    }
+
+    // case2 else
+    ListNode* tmp = head->head;
+    while (tmp->rlink->rlink != NULL) {
+        tmp = tmp->rlink;
+    }
+    ListNode* removed = tmp->rlink;
+    tmp->rlink = NULL;
+    free(removed);
+    head->tail = tmp;
+    head->size--;
+}
+
+void print_list(ListType* head) {
+    if (is_empty(head)) error("empty list");
+    ListNode* tmp = head->head;
+    printf("[List size: %d]\n", head->size);
+    while (tmp->rlink != NULL) {
+        printf("%d -> ", tmp->data);
+        tmp = tmp->rlink;
+    }
+    printf("%d\n\n", tmp->data);
 }
 
 int main(void) {
-    QueueType queue;
-    /*
-    큐 구조체를 선언
-    해당 구조체에는 배열과 front, tail 이 있다.
-    배열은 queue 선언과 함께 MAX 크기로 초기화된다.
+    // list1 이라는 헤더 타입을 초기화해준다.
+    ListType* list1;
+    list1 = init_link();
 
-    */
-    init_queue(&queue);
-    // 큐의 front, rear 를 0으로 초기화해주는 함수
-    // 구조체의 배열은 선언과 동시에 초기화되므로 초기화해줄 필요가 없다.
+    // insert_last 함수를 사용하면 자동으로 헤드와 테일에 새 노드 지정
+    insert_last(list1, 10);
+    insert_last(list1, 20);
+    print_list(list1);
+    insert_last(list1, 30);
+    print_list(list1);
 
-    enqueue(&queue, 10);
-    enqueue(&queue, 20);
-    enqueue(&queue, 30);
-    enqueue(&queue, 30);
-    print_queue(&queue);
-    printf("\n");
-
-    dequeue(&queue);
-    dequeue(&queue);
-    print_queue(&queue);
+    remove_last(list1);
+    print_list(list1);
+    remove_last(list1);
+    print_list(list1);
+    remove_last(list1);
+    print_list(list1);
     return 0;
 }
