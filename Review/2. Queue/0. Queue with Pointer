@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+포인터를 이용해서 계속 크기를 늘려가는 큐
+
+하지만 디큐를 할수록 공간 낭비가 심해진다.
+원형큐로 이런 문제를 해결할 수 있다.
+
+*/
 typedef int element;
 
 typedef struct QueueType {
