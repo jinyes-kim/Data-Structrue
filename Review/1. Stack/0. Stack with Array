@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+# define MAX 5
+typedef int element;
+
+typedef struct StackType {
+    element data[MAX];
+    int top;
+} StackType;
+
+void error(char* msg) {
+    fprintf(stderr, "%s\n", msg);
+    exit(1);
+}
+
+int is_full(StackType* s) {
+    return (s->top + 1 >= MAX);
+}
+
+int is_empty(StackType* s) {
+    return (s->top == -1);
+}
+
+void init_stack(StackType* s) {
+    s->top = -1;
+}
+
+void push(StackType* s, element item) {
+    if (is_full(s)) error("overflow");
+    s->data[++s->top] = item;
+}
+
+element pop(StackType* s) {
+    element res = s->data[s->top--];
+    return res;
+}
+
+void print_stack(StackType* s) {
+    for (int i = 0; i <= s->top; i++) {
+        printf("%d ", s->data[i]);
+    }
+    printf("\n");
+}
+
+int main(void) {
+    StackType s;
+    init_stack(&s);
+    push(&s, 10);
+    push(&s, 20);
+    push(&s, 30);
+    push(&s, 40);
+    print_stack(&s);
+    push(&s, 50);
+    print_stack(&s);
+    push(&s, 60);
+    print_stack(&s);
+    
+    pop(&s);
+    print_stack(&s);
+    pop(&s);
+    print_stack(&s);
+    pop(&s);
+    print_stack(&s);
+    pop(&s);
+    print_stack(&s);
+    pop(&s);
+    print_stack(&s);    
+    pop(&s);
+    print_stack(&s);
+    return 0;
+}
+
+
