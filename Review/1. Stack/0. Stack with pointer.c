@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-# define MAX 5
+
 typedef int element;
 
 /*
@@ -22,7 +22,7 @@ void error(char* msg) {
 }
 
 int is_full(StackType* s) {
-    return (s->top + 1 >= MAX) ;
+    return (s->top + 1 >= s->capacity) ;
 }
 
 int is_empty(StackType* s) {
