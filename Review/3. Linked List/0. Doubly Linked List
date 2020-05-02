@@ -58,6 +58,9 @@ void print_list(ListNode* head) {
     for (tmp = head->rlink; tmp != head; tmp = tmp->rlink) {
         printf("%d ", tmp->data);
     }
+    // tmp->data는 쓰레기 값
+    // tmp 는 헤드 (메모리 주소)
+    // printf("%d", tmp->data); 
     printf("\n");
 }
 
