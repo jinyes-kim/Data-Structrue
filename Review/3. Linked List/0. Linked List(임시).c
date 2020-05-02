@@ -2,13 +2,13 @@
 #include <stdlib.h>
 
 /*
-±âº» ¿¬°á ¸®½ºÆ® (Çì´õ, ¾ç¹æÇâ)
+ê¸°ë³¸ ì—°ê²° ë¦¬ìŠ¤íŠ¸ (í—¤ë”, ì–‘ë°©í–¥)
 
-³ëµå(±¸Á¶Ã¼) -> ³ëµå(±¸Á¶Ã¼) -> ³ëµå(±¸Á¶Ã¼)...
-¿Í °°Àº ±¸Á¶
+ë…¸ë“œ(êµ¬ì¡°ì²´) -> ë…¸ë“œ(êµ¬ì¡°ì²´) -> ë…¸ë“œ(êµ¬ì¡°ì²´)...
+ì™€ ê°™ì€ êµ¬ì¡°
 
-±×¸®°í À§¿Í °°Àº ¿¬°á ¸®½ºÆ®ÀÇ Çìµå¿Í Å×ÀÏ ³ëµåÀÇ
-ÁÖ¼Ò¸¦ °®´Â Çì´õ Å¸ÀÔ ±¸Á¶Ã¼
+ê·¸ë¦¬ê³  ìœ„ì™€ ê°™ì€ ì—°ê²° ë¦¬ìŠ¤íŠ¸ì˜ í—¤ë“œì™€ í…Œì¼ ë…¸ë“œì˜
+ì£¼ì†Œë¥¼ ê°–ëŠ” í—¤ë” íƒ€ì… êµ¬ì¡°ì²´
 
 */
 typedef int element;
@@ -34,19 +34,19 @@ int is_empty(ListType* head) {
     return (head->head == NULL);
 }
 
-// *ÃÊ±âÈ­ ÇÔ¼ö
-// ÇØ´ç ±¸Á¶Ã¼¸¦ ÃÊ±âÈ­ ÇÏ°í ÇÒ´çÇØÁÖ´Â ¿ëµµ
+// *ì´ˆê¸°í™” í•¨ìˆ˜
+// í•´ë‹¹ êµ¬ì¡°ì²´ë¥¼ ì´ˆê¸°í™” í•˜ê³  í• ë‹¹í•´ì£¼ëŠ” ìš©ë„
 ListType* init_link() {
     ListType* head = (ListType*)malloc(sizeof(ListType));
-    // head = NULL ¶§·Á¹ö¸®¸é ¹Ø¿¡¼­ ÇÊµå¿¡ Á¢±Ù ÀÚÃ¼°¡ ºÒ°¡´ÉÇÏ´Ù. ÁÖÀÇÇÏ±â
+    // head = NULL ë•Œë ¤ë²„ë¦¬ë©´ ë°‘ì—ì„œ í•„ë“œì— ì ‘ê·¼ ìì²´ê°€ ë¶ˆê°€ëŠ¥í•˜ë‹¤. ì£¼ì˜í•˜ê¸°
     head->tail = NULL;
     head->head = NULL;
     head->size = 0;
     return head;
 
     /*
-    Çì´õ¸¦ »ç¿ëÇÏÁö ¾Ê°í ³ëµå¸¦ ÃÊ±âÈ­ÇØÁÖ´Â ÇÔ¼ö¶ó¸é
-    head = NULL °ú °°Àº ÇüÅÂ·Î Á¢±ÙÇØ¾ß ÇÒ µí
+    í—¤ë”ë¥¼ ì‚¬ìš©í•˜ì§€ ì•Šê³  ë…¸ë“œë¥¼ ì´ˆê¸°í™”í•´ì£¼ëŠ” í•¨ìˆ˜ë¼ë©´
+    head = NULL ê³¼ ê°™ì€ í˜•íƒœë¡œ ì ‘ê·¼í•´ì•¼ í•  ë“¯
     */
 }
 ListNode* get_at(ListType* head, int target) {
@@ -59,7 +59,7 @@ ListNode* get_at(ListType* head, int target) {
 }
 
 void insert_last(ListType* head, int pre, element item) {
-    // Ãß°¡ÇÒ »õ·Î¿î ³ëµå¸¦ µ¿ÀûÇÒ´ç ÇÑ´Ù.
+    // ì¶”ê°€í•  ìƒˆë¡œìš´ ë…¸ë“œë¥¼ ë™ì í• ë‹¹ í•œë‹¤.
     ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
     tmp->data = item;
 
@@ -97,7 +97,7 @@ void insert_last(ListType* head, int pre, element item) {
 void remove_last(ListType* head, int target) {
     // case1 delete last one
     if (head->size == 1) {
-        head->head = NULL; head->tail == NULL;  // Çì´õÀÇ Çìµå¿Í Å×ÀÏ ÃÊ±âÈ­
+        head->head = NULL; head->tail == NULL;  // í—¤ë”ì˜ í—¤ë“œì™€ í…Œì¼ ì´ˆê¸°í™”
         head->size--;
         return;
     }
@@ -136,11 +136,11 @@ void print_list(ListType* head) {
 }
 
 int main(void) {
-    // list1 ÀÌ¶ó´Â Çì´õ Å¸ÀÔÀ» ÃÊ±âÈ­ÇØÁØ´Ù.
+    // list1 ì´ë¼ëŠ” í—¤ë” íƒ€ì…ì„ ì´ˆê¸°í™”í•´ì¤€ë‹¤.
     ListType* list1;
     list1 = init_link();
 
-    // insert_last ÇÔ¼ö¸¦ »ç¿ëÇÏ¸é ÀÚµ¿À¸·Î Çìµå¿Í Å×ÀÏ¿¡ »õ ³ëµå ÁöÁ¤
+    // insert_last í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ë©´ ìë™ìœ¼ë¡œ í—¤ë“œì™€ í…Œì¼ì— ìƒˆ ë…¸ë“œ ì§€ì •
     insert_last(list1, NULL, 10);
     insert_last(list1, NULL, 20);
     print_list(list1);
