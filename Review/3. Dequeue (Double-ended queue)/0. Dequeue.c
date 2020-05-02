@@ -73,14 +73,16 @@ element get_rear(dequeue* d) {
 }
 
 void print_dequeue(dequeue* d) {
-    int tmp = d->front;
-    do {
-        tmp = (tmp + 1) % MAX;
-        printf("%d ", d->data[tmp]);
-        if (d->rear == tmp)
-            break;
-    } while (tmp != d->front);
-    printf("\n");
+    if (!is_empty(d)) {
+        int tmp = d->front;
+        do {
+            tmp = (tmp + 1) % MAX;
+            printf("%d ", d->data[tmp]);
+            if (d->rear == tmp)
+                break;
+        } while (tmp != d->front);
+        printf("\n");
+    }
 }
 
 int main(void) {
