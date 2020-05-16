@@ -4,6 +4,10 @@
 /*
 Basic Heap
 
+to do next 
+1. delete
+2. heap sort
+
 */
 
 
