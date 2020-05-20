@@ -4,6 +4,7 @@
 #define TRUE 1
 #define FALSE 0
 
+//Queue
 typedef int element;
 
 typedef struct QueueType {
@@ -69,7 +70,7 @@ void init_graph(GraphType* g) {
 
 void insert_vertex(GraphType* g, int v) {
     if (((g->n) + 1) > MAX){
-        fprintf(stderr, "±×·¡ÇÁ Á¤Á¡ °³¼ö ÃÊ°ú");
+        fprintf(stderr, "ê·¸ë˜í”„ ì •ì  ê°œìˆ˜ ì´ˆê³¼");
         return;
     }
     g->n++;
@@ -78,7 +79,7 @@ void insert_vertex(GraphType* g, int v) {
 void insert_edge(GraphType* g, int u, int v) {
     GraphNode* node;
     if (u >= g->n || v >= g->n) {
-        fprintf(stderr, "±×·¡ÇÁ: Á¤Á¡¹øÈ£ ¿À·ù");
+        fprintf(stderr, "ê·¸ë˜í”„: ì •ì ë²ˆí˜¸ ì˜¤ë¥˜");
         return;
     }
     node = (GraphNode*)malloc(sizeof(GraphNode));
@@ -90,7 +91,7 @@ void insert_edge(GraphType* g, int u, int v) {
 void print_adj_list(GraphType* g) {
     for (int i = 0; i < g->n; i++) {
         GraphNode* p = g->adj_list[i];
-        printf("Á¤Á¡ %dÀÇ ÀÎÁ¢ ¸®½ºÆ® ", i);
+        printf("ì •ì  %dì˜ ì¸ì ‘ ë¦¬ìŠ¤íŠ¸ ", i);
         while (p != NULL) {
             printf("-> %d ", p->vertex);
             p = p->link;
@@ -100,7 +101,7 @@ void print_adj_list(GraphType* g) {
 }
 
 void free_adj_list(GraphType* g) {
-    //printf("±×·¡ÇÁ: ¸Ş¸ğ¸® ÇØÁ¦\n");
+    //printf("ê·¸ë˜í”„: ë©”ëª¨ë¦¬ í•´ì œ\n");
     for (int i = 0; i < g->n; i++) {
         GraphNode* p = g->adj_list[i];
         while (p != NULL) {
