@@ -5,10 +5,13 @@
 
 void bubble_sort(int list[], int n){
     int i, j, tmp;
-    for (i = n - 1; i > 0; i--) {       // range
+    int flag = 1;
+    for (i = n - 1; i > 0 && flag == 1; i--) {       // range
+        flag = 0;
         for (j = 0; j < i; j++) {       // travel
             if (list[j] > list[j + 1]) {    // check condition
                 SWAP(list[j], list[j+1], tmp);
+                flag = 1;
             }
         }
     }
