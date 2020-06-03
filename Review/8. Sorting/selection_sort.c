@@ -30,7 +30,7 @@ int main(void) {
     }
     print_list(list, n);
     printf("\n");
-    selection_sort(&list, n);
+    selection_sort(list, n);
     print_list(list, n);
     return 0;
 }
