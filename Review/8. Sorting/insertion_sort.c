@@ -31,7 +31,7 @@ int main(void) {
     }
     print_list(list, n);
     printf("\n");
-    insertion_sort(&list, n);
+    insertion_sort(list, n);
     print_list(list, n);
     return 0;
 }
