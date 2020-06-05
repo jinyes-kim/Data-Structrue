@@ -155,3 +155,168 @@ int main(void) {
     print_list(list1);
     return 0;
 }
+
+
+
+
+
+/*
+보완 코드
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef int element;
+
+typedef struct ListNode {
+    element data;
+    struct ListNode* link;
+} ListNode;
+
+
+// ADT
+void error(char* msg);
+ListNode* get_last_node(ListNode* list);
+ListNode* insert_first(ListNode* list, element item);
+ListNode* insert(ListNode* list, ListNode* pre, element item);
+ListNode* delete_first(ListNode* list);
+ListNode* delet(ListNode* list, ListNode* pre);
+void print_list(ListNode* list);
+
+
+void error(char* msg) {
+    fprintf(stderr, msg);
+    exit(1);
+}
+
+
+ListNode* get_last_node(ListNode* head) {
+    if (head == NULL) return;
+    ListNode* tmp = head;
+    while (tmp->link != NULL) {
+        tmp = tmp->link;
+    }
+}
+
+ListNode* insert_first(ListNode* head, element item) {
+    ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
+    tmp->data = item;
+    if (head == NULL) {
+        tmp->link = NULL;
+        return tmp;
+    }
+    tmp->link = head;
+    return tmp;
+}
+
+ListNode* insert(ListNode* head, ListNode* pre, element item) {
+    ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
+    tmp->data = item;
+    if (head == NULL) {
+        tmp->link = NULL;
+        return tmp;
+    }
+    ListNode* tail;
+    if (pre == NULL) {
+        tail = get_last_node(head);
+        tail->link = tmp;
+        tmp->link = NULL;
+        return head;
+    }
+    tail = head;
+    while (tail != pre) {
+        tail = tail->link;
+    }
+    tmp->link - tail->link;
+    tail->link = tmp;
+    return head;
+}
+
+ListNode* delete_first(ListNode* head) {
+    if (head == NULL) error("리스트에 요소가 없습니다");
+    ListNode* removed = head;
+    head = head->link;
+    free(removed);
+    return head;
+}
+
+ListNode* delete(ListNode* head, ListNode* pre) {
+    ListNode* tmp = head;
+    ListNode* removed;
+
+    if (head == NULL) error("리스트에 요소가 없습니다");
+    if (pre == NULL) {
+        ListNode* tail = get_last_node(head);
+        if (head->link == NULL) {
+            removed = head;
+            free(removed);
+            return;
+        }
+        else {
+            while (tmp->link != tail) {
+                tmp = tmp->link;
+            }
+        }
+    }
+    else {
+        while (tmp->link != pre) {
+            tmp = tmp->link;
+        }
+    }
+    removed = tmp->link;
+    tmp->link = tmp->link->link;
+    free(removed);
+    return head;
+}
+
+
+void print_list(ListNode* head) {
+    ListNode* tmp = head;
+    while (tmp != NULL) {
+        printf("-> %d ", tmp->data);
+        tmp = tmp->link;
+    }
+    printf("\n");
+}
+
+
+
+int main(void) {
+
+    ListNode* head = NULL;
+
+
+    head = insert_first(head, 1);
+    head = insert_first(head, 2);
+    head = insert_first(head, 3);
+    head = insert_first(head, 4);
+
+    print_list(head);
+
+
+    head = insert(head, NULL, 5);
+    head = insert(head, NULL, 6);
+    head = insert(head, NULL, 7);
+    head = insert(head, NULL, 8);
+
+    print_list(head);
+
+    head = delete_first(head);
+    head = delete_first(head);
+    head = delete_first(head);
+    print_list(head);
+
+    head = delete(head, NULL);
+    head = delete(head, NULL);
+    head = delete(head, NULL);
+    print_list(head);
+
+    head = delete(head, NULL);
+    head = delete(head, NULL);
+    head = delete(head, NULL);
+    print_list(head);
+
+    return 0;
+}
+
