@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*
-삽입, 삭제, 출력 완료
-*/
-
 typedef int element;
 
 typedef struct ListNode {
@@ -16,7 +12,6 @@ typedef struct ListNode {
 
 // ADT
 void error(char* msg);
-ListNode* get_last_node(ListNode* list);
 ListNode* insert_first(ListNode* list, element item);
 ListNode* insert(ListNode* list, ListNode* pre, element item);
 ListNode* delete_first(ListNode* list);
@@ -29,14 +24,6 @@ void error(char* msg) {
     exit(1);
 }
 
-
-ListNode* get_last_node(ListNode* head) {
-    if (head == NULL) return;
-    ListNode* tmp = head;
-    while (tmp->rlink != NULL) {
-        tmp = tmp->rlink;
-    }
-}
 
 ListNode* insert_first(ListNode* head, element item) {
     ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
@@ -53,7 +40,7 @@ ListNode* insert_first(ListNode* head, element item) {
     return head;
 }
 
-ListNode* insert(ListNode* head, ListNode* pre, element item) {
+ListNode* insert(ListNode* head, element item) {
     ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
     tmp->data = item;
     if (head == NULL) {
@@ -62,17 +49,6 @@ ListNode* insert(ListNode* head, ListNode* pre, element item) {
         return tmp;
     }
     ListNode* tail = head;
-    if (pre != NULL) {
-        tail = head;
-        while (tail != pre) {
-            tail = tail->rlink;
-        }
-        tail->rlink->llink = tmp;
-        tmp->rlink = tail;
-        tmp->llink = tail;
-        tail->rlink = tmp;
-        return head;
-    }
     head->rlink->llink = tmp;
     tmp->rlink = head->rlink;
     head->rlink = tmp;
@@ -133,10 +109,10 @@ int main(void) {
     print_list(head);
 
 
-    head = insert(head, NULL, 5);
-    head = insert(head, NULL, 6);
-    head = insert(head, NULL, 7);
-    head = insert(head, NULL, 8);
+    head = insert(head, 5);
+    head = insert(head, 6);
+    head = insert(head, 7);
+    head = insert(head, 8);
 
     print_list(head);
 
