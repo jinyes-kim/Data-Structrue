@@ -1,3 +1,9 @@
+/*
+생각보다 까다로움
+
+구조 그려보면서 이해하기
+
+*/
 #include <stdio.h>
 #include <stdlib.h>
 
