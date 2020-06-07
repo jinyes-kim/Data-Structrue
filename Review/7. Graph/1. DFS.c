@@ -1,105 +1,111 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX 50
-#define TRUE 1
-#define FALSE 0
-typedef struct GraphNode {
-    int vertex;
-    struct GraphNode* link;
-} GraphNode;
 
-typedef struct GraphType {
-    int n;
-    GraphNode* adj_list[MAX];
-} GraphType;
+typedef int element;
 
-void init(GraphType* g) {
-    int v;
-    g->n = 0;
-    for (v = 0; v < MAX; v++) {
-        g->adj_list[v] = NULL;
+typedef struct node {
+    element vertext;
+    struct node* link;
+} node;
+
+typedef struct graph {
+    int size;
+    node** header;
+} graph;
+
+//ADT
+
+graph* init_graph(int n);
+node* insert_tail(node* list, element item);
+void add_edge(node* list, element v, element u);
+void print_list(node* head);
+void print_graph(graph* g);
+void dfs(graph* g);
+void dfs(graph* g);
+
+
+graph* init_graph(int n) {
+    graph* tmp = (graph*)malloc(sizeof(graph));
+    tmp->header = (node**)malloc(sizeof(node*) * n);
+    tmp->size = n;
+    for (int i = 0; i < n; i++) {
+        tmp->header[i] = NULL;
+    }
+    return tmp;
+}
+
+node* insert_tail(node* head, element item) {
+    node* res = (node*)malloc(sizeof(node*));
+    res->vertext = item;
+    res->link = NULL;
+    if (head == NULL) return res;
+    
+    node* tmp = head;
+    while (tmp->link != NULL) {
+        tmp = tmp->link;
+    }
+    tmp->link = res;
+    return head;
+}
+
+void add_edge(graph* g, element v, element u) {
+    g->header[v] = insert_tail(g->header[v], u);
+    g->header[u] = insert_tail(g->header[u], v);
+}
+
+void print_list(node* head) {
+    node* tmp = head;
+    for (; tmp; tmp = tmp->link) {
+        printf("%d ", tmp->vertext);
+    }
+    printf("\n");
+}
+
+void print_graph(graph* g) {
+    for (int i = 0; i < g->size; i++) {
+        printf("정점 [%d]: ", i);
+        print_list(g->header[i]);
     }
 }
 
-void insert_vertex(GraphType* g, int v) {
-    if (((g->n) + 1) > MAX){
-        fprintf(stderr, "그래프 정점 개수 초과");
-        return;
+
+int visited[100] = { 0 };
+void reset_dummy() {
+    for (int i = 0; i < 100; i++) {
+        visited[i] = 0;
     }
-    g->n++;
 }
 
-void insert_edge(GraphType* g, int u, int v) {
-    GraphNode* node;
-    if (u >= g->n || v >= g->n) {
-        fprintf(stderr, "그래프: 정점번호 오류");
-        return;
-    }
-    node = (GraphNode*)malloc(sizeof(GraphNode));
-    node->vertex = v;
-    node->link = g->adj_list[u];
-    g->adj_list[u] = node;
-}
-
-void print_adj_list(GraphType* g) {
-    for (int i = 0; i < g->n; i++) {
-        GraphNode* p = g->adj_list[i];
-        printf("정점 %d의 인접 리스트 ", i);
-        while (p != NULL) {
-            printf("-> %d ", p->vertex);
-            p = p->link;
+void dfs(graph* g, int v) {
+    node* tmp;
+    visited[v] = 1;
+    printf("%d ", v);
+    for (tmp = g->header[v]; tmp; tmp = tmp->link) {
+        if (visited[tmp->vertext] != 1) {
+            dfs(g, tmp->vertext);
         }
-        printf("\n");
     }
 }
-
-void free_adj_list(GraphType* g) {
-    //printf("그래프: 메모리 해제\n");
-    for (int i = 0; i < g->n; i++) {
-        GraphNode* p = g->adj_list[i];
-        while (p != NULL) {
-            GraphNode* removed = p;
-            p = p->link;
-            free(removed);
-        }
-    }
-}
-
-int visited[MAX];
-
-void dfs(GraphType* g, int v) {
-    GraphNode* w;
-    visited[v] = TRUE;
-    printf("정점 %d ->", v);
-    for (w = g->adj_list[v]; w; w = w->link) {
-        if (!visited[w->vertex]) {
-            dfs(g, w->vertex);
-        }
-    }
-}
-
 
 
 int main(void) {
-    GraphType* g;
-    g = (GraphType*)malloc(sizeof(GraphType));
-    init(g);
-    for (int i = 0; i < 4; i++) {
-        insert_vertex(g, i);
+    srand(time(NULL));
+    int n;
+    printf("정점 개수: ");
+    scanf_s("%d", &n);
+    graph* g = init_graph(n);
+    for (int i = 0; i < n; i++) {
+        for (int j = i+1; j < n; j++) {
+            if (rand() % 5 == 0)
+                add_edge(g, i, j);
+        }
     }
-    insert_edge(g, 0, 1);
-    insert_edge(g, 1, 0);
-    insert_edge(g, 0, 2);
-    insert_edge(g, 2, 0);
-    insert_edge(g, 0, 3);
-    insert_edge(g, 3, 0);
-    insert_edge(g, 1, 2);
-    insert_edge(g, 2, 1);
-    insert_edge(g, 2, 3);
-    insert_edge(g, 3, 2);
-    print_adj_list(g);
-    dfs(g, 0);
-    free(g);
-    free_adj_list(g);
+    print_graph(g);
+
+    reset_dummy();
+    printf("탐색할 노드: ");
+    scanf_s("%d", &n);
+    dfs(g, n);
+
     return 0;
 }
