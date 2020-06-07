@@ -13,14 +13,13 @@ typedef struct graph {
     node** header;
 } graph;
 
-
 //ADT
-graph* init_graph(int n);
-node* insert_tail(node* head, element item);
-void add_edge(graph* g, element v, element u);
-void print_list(node* list);
-void print_graph(graph* g);
 
+graph* init_graph(int n);
+node* insert_tail(node* list, element item);
+void add_edge(node* list, element v, element u);
+void print_list(node* head);
+void print_graph(graph* g);
 
 graph* init_graph(int n) {
     graph* tmp = (graph*)malloc(sizeof(graph));
@@ -33,19 +32,16 @@ graph* init_graph(int n) {
 }
 
 node* insert_tail(node* head, element item) {
-    node* tmp = (node*)malloc(sizeof(node));
-    tmp->vertext = item;
-    tmp->link = NULL;
-    if (head == NULL) {
-        return tmp;
+    node* res = (node*)malloc(sizeof(node*));
+    res->vertext = item;
+    res->link = NULL;
+    if (head == NULL) return res;
+    
+    node* tmp = head;
+    while (tmp->link != NULL) {
+        tmp = tmp->link;
     }
-    else {
-        node* marker = head;
-        while (marker->link != NULL) {
-            marker = marker->link;
-        }
-        marker->link = tmp;
-    }
+    tmp->link = res;
     return head;
 }
 
@@ -54,30 +50,29 @@ void add_edge(graph* g, element v, element u) {
     g->header[u] = insert_tail(g->header[u], v);
 }
 
-void print_list(node* list) {
-    node* tmp = list;
+void print_list(node* head) {
+    node* tmp = head;
     for (; tmp; tmp = tmp->link) {
         printf("%d ", tmp->vertext);
-    }        
+    }
     printf("\n");
 }
 
 void print_graph(graph* g) {
     for (int i = 0; i < g->size; i++) {
-        printf("정점 [%d] : ", i);
+        printf("정점 [%d]: ", i);
         print_list(g->header[i]);
     }
-    
 }
 
 int main(void) {
     srand(time(NULL));
-    int size;
-    printf("노드 개수:");
-    scanf_s("%d", &size);
-    graph* g = init_graph(size);
-    for (int i = 0; i < size; i++) {
-        for (int j = i + 1; j < size; j++) {
+    int n;
+    printf("정점 개수: ");
+    scanf_s("%d", &n, 2);
+    graph* g = init_graph(n);
+    for (int i = 0; i < n; i++) {
+        for (int j = i+1; j < n; j++) {
             if (rand() % 5 == 0)
                 add_edge(g, i, j);
         }
@@ -85,4 +80,3 @@ int main(void) {
     print_graph(g);
     return 0;
 }
-
