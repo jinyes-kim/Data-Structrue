@@ -1,162 +1,155 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX 50
-#define TRUE 1
-#define FALSE 0
+#define MAX_QUEUE_SIZE 100
 
-//Queue
 typedef int element;
 
-typedef struct QueueType {
-    element data[MAX];
+typedef struct node {
+    element vertext;
+    struct node* link;
+} node;
+
+typedef struct graph {
+    int size;
+    node** header;
+} graph;
+
+//ADT
+
+graph* init_graph(int n);
+node* insert_tail(node* list, element item);
+void add_edge(node* list, element v, element u);
+void print_list(node* head);
+void print_graph(graph* g);
+void dfs(graph* g);
+void dfs(graph* g);
+
+//Queue
+typedef struct Queue {
+    element data[MAX_QUEUE_SIZE];
     int front, rear;
 } QueueType;
-
-
-void error(char* msg) {
-    fprintf(stderr, "%s\n", msg);
-    exit(1);
-}
 
 void init_queue(QueueType* q) {
     q->front = -1;
     q->rear = -1;
 }
 
-int is_full(QueueType* q) {
-    return (q->rear + 1 >= MAX);
+void error(char* msg) {
+    fprintf(stderr, msg);
+    exit(1);
 }
 
 int is_empty(QueueType* q) {
     return (q->front == q->rear);
 }
 
-void print_queue(QueueType* q) {
-    for (int i = q->front + 1; i <= q->rear; i++) {
-        printf("%d ", q->data[i]);
-    }
-    printf("\n");
+int is_full(QueueType* q) {
+    return (q->rear + 1 >= MAX_QUEUE_SIZE);
 }
 
 void enqueue(QueueType* q, element item) {
     if (is_full(q)) error("overflow");
-    q->data[++q->rear] = item;
+    q->data[++(q->rear)] = item;
 }
 
 element dequeue(QueueType* q) {
     if (is_empty(q)) error("underflow");
-    element res = q->data[++(q->front)];
-    return res;
+    return  q->data[++(q->front)];
 }
 
-//Graph 
-typedef struct GraphNode {
-    int vertex;
-    struct GraphNode* link;
-} GraphNode;
 
-typedef struct GraphType {
-    int n;
-    GraphNode* adj_list[MAX];
-} GraphType;
+graph* init_graph(int n) {
+    graph* tmp = (graph*)malloc(sizeof(graph));
+    tmp->header = (node**)malloc(sizeof(node*) * n);
+    tmp->size = n;
+    for (int i = 0; i < n; i++) {
+        tmp->header[i] = NULL;
+    }
+    return tmp;
+}
 
-void init_graph(GraphType* g) {
-    int v;
-    g->n = 0;
-    for (v = 0; v < MAX; v++) {
-        g->adj_list[v] = NULL;
+node* insert_tail(node* head, element item) {
+    node* res = (node*)malloc(sizeof(node*));
+    res->vertext = item;
+    res->link = NULL;
+    if (head == NULL) return res;
+    
+    node* tmp = head;
+    while (tmp->link != NULL) {
+        tmp = tmp->link;
+    }
+    tmp->link = res;
+    return head;
+}
+
+void add_edge(graph* g, element v, element u) {
+    g->header[v] = insert_tail(g->header[v], u);
+    g->header[u] = insert_tail(g->header[u], v);
+}
+
+void print_list(node* head) {
+    node* tmp = head;
+    for (; tmp; tmp = tmp->link) {
+        printf("%d ", tmp->vertext);
+    }
+    printf("\n");
+}
+
+void print_graph(graph* g) {
+    for (int i = 0; i < g->size; i++) {
+        printf("정점 [%d]: ", i);
+        print_list(g->header[i]);
     }
 }
 
-void insert_vertex(GraphType* g, int v) {
-    if (((g->n) + 1) > MAX){
-        fprintf(stderr, "그래프 정점 개수 초과");
-        return;
-    }
-    g->n++;
-}
 
-void insert_edge(GraphType* g, int u, int v) {
-    GraphNode* node;
-    if (u >= g->n || v >= g->n) {
-        fprintf(stderr, "그래프: 정점번호 오류");
-        return;
-    }
-    node = (GraphNode*)malloc(sizeof(GraphNode));
-    node->vertex = v;
-    node->link = g->adj_list[u];
-    g->adj_list[u] = node;
-}
-
-void print_adj_list(GraphType* g) {
-    for (int i = 0; i < g->n; i++) {
-        GraphNode* p = g->adj_list[i];
-        printf("정점 %d의 인접 리스트 ", i);
-        while (p != NULL) {
-            printf("-> %d ", p->vertex);
-            p = p->link;
-        }
-        printf("\n");
+int visited[100] = { 0 };
+void reset_dummy() {
+    for (int i = 0; i < 100; i++) {
+        visited[i] = 0;
     }
 }
 
-void free_adj_list(GraphType* g) {
-    //printf("그래프: 메모리 해제\n");
-    for (int i = 0; i < g->n; i++) {
-        GraphNode* p = g->adj_list[i];
-        while (p != NULL) {
-            GraphNode* removed = p;
-            p = p->link;
-            free(removed);
-        }
-    }
-}
-
-int visited[MAX];
-
-void bfs(GraphType* g, int v) {
-    GraphNode* w;
+void bfs(graph* g, int n) {
+    int i;
+    node* tmp;
     QueueType q;
-
     init_queue(&q);
-    visited[v] = TRUE;
-    printf("%d -> ", v);
-    enqueue(&q, v);
+    visited[n] = 1;
+    printf("%d ", n);
+    enqueue(&q, n);
+    
     while (!is_empty(&q)) {
-        v = dequeue(&q);
-        for (w = g->adj_list[v]; w; w = w->link) {
-            if (!visited[w->vertex]) {
-                visited[w->vertex] = TRUE;
-                printf("%d -> ", w->vertex);
-                enqueue(&q, w->vertex);
+        i = dequeue(&q);
+        for (tmp = g->header[i]; tmp; tmp = tmp->link) {
+            if (visited[tmp->vertext] != 1) {
+                visited[tmp->vertext] = 1;
+                printf("%d ", tmp->vertext);
+                enqueue(&q, tmp->vertext);
             }
         }
     }
 }
 
 
-
 int main(void) {
-    GraphType* g;
-    g = (GraphType*)malloc(sizeof(GraphType));
-    init_graph(g);
-    for (int i = 0; i < 5; i++) {
-        insert_vertex(g, i);
+    srand(time(NULL));
+    int n;
+    printf("정점 개수: ");
+    scanf_s("%d", &n);
+    graph* g = init_graph(n);
+    for (int i = 0; i < n; i++) {
+        for (int j = i+1; j < n; j++) {
+            if (rand() % 5 == 0)
+                add_edge(g, i, j);
+        }
     }
-    insert_edge(g, 0, 1);
-    insert_edge(g, 1, 0);
-    insert_edge(g, 0, 2);
-    insert_edge(g, 2, 0);
-    insert_edge(g, 0, 3);
-    insert_edge(g, 3, 0);
-    insert_edge(g, 1, 2);
-    insert_edge(g, 2, 1);
-    insert_edge(g, 2, 3);
-    insert_edge(g, 3, 2);
-    insert_edge(g, 3, 4);
-    print_adj_list(g);
-    bfs(g, 0);
-    free_adj_list(g);
-    free(g);
+    print_graph(g);
+
+    reset_dummy();
+    printf("탐색할 노드: ");
+    scanf_s("%d", &n);
+    bfs(g, n);
     return 0;
 }
