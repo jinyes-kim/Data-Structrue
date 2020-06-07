@@ -1,88 +1,88 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX 50
 
-typedef struct GraphNode {
-    int vertex;
-    struct GraphNode* link;
-} GraphNode;
+typedef int element;
 
-typedef struct GraphType {
-    int n;
-    GraphNode* adj_list[MAX];
-} GraphType;
+typedef struct node {
+    element vertext;
+    struct node* link;
+} node;
 
-void init(GraphType* g) {
-    int v;
-    g->n = 0;
-    for (v = 0; v < MAX; v++) {
-        g->adj_list[v] = NULL;
+typedef struct graph {
+    int size;
+    node** header;
+} graph;
+
+
+//ADT
+graph* init_graph(int n);
+node* insert_tail(node* head, element item);
+void add_edge(graph* g, element v, element u);
+void print_list(node* list);
+void print_graph(graph* g);
+
+
+graph* init_graph(int n) {
+    graph* tmp = (graph*)malloc(sizeof(graph));
+    tmp->header = (node**)malloc(sizeof(node*) * n);
+    tmp->size = n;
+    for (int i = 0; i < n; i++) {
+        tmp->header[i] = NULL;
     }
+    return tmp;
 }
 
-void insert_vertex(GraphType* g, int v) {
-    if (((g->n) + 1) > MAX){
-        fprintf(stderr, "±×·¡ÇÁ Á¤Á¡ °³¼ö ÃÊ°ú");
-        return;
+node* insert_tail(node* head, element item) {
+    node* tmp = (node*)malloc(sizeof(node));
+    tmp->vertext = item;
+    tmp->link = NULL;
+    if (head == NULL) {
+        return tmp;
     }
-    g->n++;
-}
-
-void insert_edge(GraphType* g, int u, int v) {
-    GraphNode* node;
-    if (u >= g->n || v >= g->n) {
-        fprintf(stderr, "±×·¡ÇÁ: Á¤Á¡¹øÈ£ ¿À·ù");
-        return;
-    }
-    node = (GraphNode*)malloc(sizeof(GraphNode));
-    node->vertex = v;
-    node->link = g->adj_list[u];
-    g->adj_list[u] = node;
-}
-
-void print_adj_list(GraphType* g) {
-    for (int i = 0; i < g->n; i++) {
-        GraphNode* p = g->adj_list[i];
-        printf("Á¤Á¡ %dÀÇ ÀÎÁ¢ ¸®½ºÆ® ", i);
-        while (p != NULL) {
-            printf("-> %d ", p->vertex);
-            p = p->link;
+    else {
+        node* marker = head;
+        while (marker->link != NULL) {
+            marker = marker->link;
         }
-        printf("\n");
+        marker->link = tmp;
     }
+    return head;
 }
 
-void free_adj_list(GraphType* g) {
-    //printf("±×·¡ÇÁ: ¸Þ¸ð¸® ÇØÁ¦\n");
-    for (int i = 0; i < g->n; i++) {
-        GraphNode* p = g->adj_list[i];
-        while (p != NULL) {
-            GraphNode* removed = p;
-            p = p->link;
-            free(removed);
-        }
+void add_edge(graph* g, element v, element u) {
+    g->header[v] = insert_tail(g->header[v], u);
+    g->header[u] = insert_tail(g->header[u], v);
+}
+
+void print_list(node* list) {
+    node* tmp = list;
+    for (; tmp; tmp = tmp->link) {
+        printf("%d ", tmp->vertext);
+    }        
+    printf("\n");
+}
+
+void print_graph(graph* g) {
+    for (int i = 0; i < g->size; i++) {
+        printf("ì •ì  [%d] : ", i);
+        print_list(g->header[i]);
     }
+    
 }
 
 int main(void) {
-    GraphType* g;
-    g = (GraphType*)malloc(sizeof(GraphType));
-    init(g);
-    for (int i = 0; i < 4; i++) {
-        insert_vertex(g, i);
+    srand(time(NULL));
+    int size;
+    printf("ë…¸ë“œ ê°œìˆ˜:");
+    scanf_s("%d", &size);
+    graph* g = init_graph(size);
+    for (int i = 0; i < size; i++) {
+        for (int j = i + 1; j < size; j++) {
+            if (rand() % 5 == 0)
+                add_edge(g, i, j);
+        }
     }
-    insert_edge(g, 0, 1);
-    insert_edge(g, 1, 0);
-    insert_edge(g, 0, 2);
-    insert_edge(g, 2, 0);
-    insert_edge(g, 0, 3);
-    insert_edge(g, 3, 0);
-    insert_edge(g, 1, 2);
-    insert_edge(g, 2, 1);
-    insert_edge(g, 2, 3);
-    insert_edge(g, 3, 2);
-    print_adj_list(g);
-    free(g);
-    free_adj_list(g);
+    print_graph(g);
     return 0;
 }
+
