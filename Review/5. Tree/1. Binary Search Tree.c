@@ -1,55 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// binary search tree
-
 typedef int element;
 
 typedef struct TreeNode {
     element data;
     struct TreeNode* left;
     struct TreeNode* right;
+
 } TreeNode;
 
-
-// ADT
+//ADT
 TreeNode* search(TreeNode* root, element key);
-TreeNode* new_node(element key);
 TreeNode* insert_node(TreeNode* root, element key);
+TreeNode* delete_node(TreeNode* root, element key);
 TreeNode* get_min_node(TreeNode* root);
-TreeNode* delete_node(TreeNode* root);
-TreeNode* construct_Tree(element key);
+TreeNode* new_node(element key);
+TreeNode* construct_Tree(int n);
+void inorder(TreeNode* root);
 
 TreeNode* search(TreeNode* root, element key) {
-    if (root == NULL) return;
-
-    if (root->data == key) return root;
-    else if (key < root->data) {
+    if (root == NULL) return NULL;
+    if (key < root->data) {
         search(root->left, key);
     }
-    else {
+    else if (root->data < key) {
         search(root->right, key);
+    }
+    else {
+        return root;
     }
 }
 
 TreeNode* new_node(element key) {
     TreeNode* tmp = (TreeNode*)malloc(sizeof(TreeNode));
     tmp->data = key;
-    tmp->left = NULL;
-    tmp->right = NULL;
+    tmp->left = tmp->right = NULL;
     return tmp;
 }
 
 TreeNode* insert_node(TreeNode* root, element key) {
+    
     if (root == NULL) return new_node(key);
-    else if (key < root->data) {
+    if (key < root->data) {
         root->left = insert_node(root->left, key);
     }
-    else {
+    else if (root->data < key) {
         root->right = insert_node(root->right, key);
     }
     return root;
 }
+
 
 TreeNode* get_min_node(TreeNode* root) {
     TreeNode* tmp = root;
@@ -59,15 +60,17 @@ TreeNode* get_min_node(TreeNode* root) {
     return tmp;
 }
 
+
 TreeNode* delete_node(TreeNode* root, element key) {
-    if (root == NULL) return root;
+    if (root == NULL) return NULL;
+
     if (key < root->data) {
         root->left = delete_node(root->left, key);
     }
-    else if (root->data < key){
+    else if (root->data < key) {
         root->right = delete_node(root->right, key);
     }
-    // root == key 
+    // root->data == key
     else {
         if (root->right == NULL) {
             TreeNode* tmp = root->left;
@@ -89,6 +92,19 @@ TreeNode* delete_node(TreeNode* root, element key) {
     return root;
 }
 
+TreeNode* construct_Tree(int n) {
+    int count = 0;
+    TreeNode* head = NULL;
+    while (count < n) {
+        int tmp;
+        printf("=> ");
+        scanf_s("%d", &tmp, 2);
+        head = insert_node(head, tmp);
+        count++;
+    }
+    return head;
+}
+
 void inorder(TreeNode* root) {
     if (root != NULL) {
         inorder(root->left);
@@ -97,41 +113,16 @@ void inorder(TreeNode* root) {
     }
 }
 
-void postorder(TreeNode* root) {
-    if (root != NULL) {
-        postorder(root->left);
-        postorder(root->right);
-        printf("%d ", root->data);
-    }
-}
-
-TreeNode* construct_Tree(int n) {
-    int count = 0;
-    TreeNode* head = NULL;
-    while (count < n) {
-        element key;
-        printf("=> ");
-        scanf_s("%d", &key, 2);
-        head = insert_node(head, key);
-        count++;
-    }
-    return head;
-}
-
-
 int main(void) {
     TreeNode* head = construct_Tree(5);
     inorder(head);
     printf("\n");
-    postorder(head);
+
+    TreeNode* tmp = search(head, 3);
+    printf("\n%d\n", tmp->data);
 
     head = delete_node(head, 5);
-    head = delete_node(head, 4);
-    printf("\n");
+    head = delete_node(head, 2);
     inorder(head);
-    printf("\n");
-    postorder(head);
-
-
     return 0;
 }
