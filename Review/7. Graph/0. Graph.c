@@ -69,7 +69,7 @@ int main(void) {
     srand(time(NULL));
     int n;
     printf("정점 개수: ");
-    scanf_s("%d", &n, 2);
+    scanf_s("%d", &n);
     graph* g = init_graph(n);
     for (int i = 0; i < n; i++) {
         for (int j = i+1; j < n; j++) {
