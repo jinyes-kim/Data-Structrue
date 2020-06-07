@@ -14,8 +14,8 @@ typedef struct graph {
     node** header;
 } graph;
 
-//ADT
 
+//ADT
 graph* init_graph(int n);
 node* insert_tail(node* list, element item);
 void add_edge(node* list, element v, element u);
@@ -59,6 +59,7 @@ element dequeue(QueueType* q) {
 }
 
 
+//
 graph* init_graph(int n) {
     graph* tmp = (graph*)malloc(sizeof(graph));
     tmp->header = (node**)malloc(sizeof(node*) * n);
@@ -119,7 +120,7 @@ void bfs(graph* g, int n) {
     visited[n] = 1;
     printf("%d ", n);
     enqueue(&q, n);
-    
+  
     while (!is_empty(&q)) {
         i = dequeue(&q);
         for (tmp = g->header[i]; tmp; tmp = tmp->link) {
