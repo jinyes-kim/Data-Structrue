@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define SWAP(x, y, t) ((t)=(x), (x)=(y), (y)=(t))
 #define MAX 10
 
 void insertion_sort(int list[], int n) {
