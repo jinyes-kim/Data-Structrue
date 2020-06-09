@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef int element;
+
+typedef struct node {
+    element data;
+    struct node* link;
+} node;
+
+typedef struct Graph {
+    node** header;
+    int size;
+} Graph;
+
+//ADT
+void init_graph(int n);
+void add_edge(Graph* g, int v, int w);
+node* insert_tail(node* head, element item);
+void print_list(node* head);
+void print_graph(Graph* g);
+
+void init_graph(Graph* g, int n) {
+    g->header = (node**)malloc(sizeof(node*) * n);
+    g->size = n;
+
+    for (int i = 0; i < n; i++) {
+        g->header[i] = NULL;
+    }
+}
+
+node* insert_tail(node* head, element item) {
+    node* res = (node*)malloc(sizeof(node*));
+    res->data = item;
+    res->link = NULL;
+    if (head == NULL) return res;
+
+    node* tmp = head;
+    while (tmp->link != NULL) {
+        tmp = tmp->link;
+    }
+    tmp->link = res;
+    return head;
+}
+
+void add_edge(Graph* g, int v, int w) {
+    g->header[v] = insert_tail(g->header[v], (element)w);
+    g->header[w] = insert_tail(g->header[w], (element)v);
+}
+
+void print_list(node* list) {
+    node* tmp = list;
+    for (; tmp; tmp = tmp->link) {
+        printf("%d ", tmp->data);
+    }
+    printf("\n");
+}
+
+void print_graph(Graph* g) {
+    for (int i = 0; i < g->size; i++) {
+        printf("정점 [%d]: ", i);
+        print_list(g->header[i]);
+    }
+}
+
+int main(void) {
+    srand(time(NULL));
+    int n;
+    printf("정점 개수: ");
+    scanf_s("%d", &n);
+    Graph g;
+    init_graph(&g, n);
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (rand() % 5 == 0) {
+                add_edge(&g, i, j);
+            }
+        }
+    }
+    print_graph(&g);
+
+    return 0;
+}
