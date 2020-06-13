@@ -1,81 +1,95 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*
-원형 링크드 리스트
-
-헤드를 제일 마지막 노드에 위치시는 것으로 원형 구조로 구현할 수 있다.
-
-
-
-insert_fisrt - 마지막 다음이 처음이니까 헤드(마지막 노드) 노드 뒤에 추가한다.
-               원래 헤드 뒤의 노드를 새로 추가한 노드 뒤로 위치시킨다.
-
-
-insert_last - 헤드 노드 뒤에 추가하고, 새로 추가한 노드를 헤드로 만든다.
-
-
-*/
-
 typedef int element;
-
 typedef struct ListNode {
     element data;
     struct ListNode* link;
 } ListNode;
 
-void error(char* msg) {
-    fprintf(stderr, "%s\n", msg);
-    exit(1);
-}
+//ADT
+ListNode* insert_first(ListNode* head, element time);
+ListNode* insert_last(ListNode* head, element time);
+void print_list(ListNode* head);
+ListNode* delete_first(ListNode* head);
+ListNode* delete_last(ListNode* head);
 
-ListNode* insert_first(ListNode* head, element value) {
+ListNode* insert_first(ListNode* head, element item) {
     ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
-    tmp->data = value;
+    tmp->data = item;
     if (head == NULL) {
-        head = tmp;
-        tmp->link = head;
+        tmp->link = tmp;
+        return tmp;
     }
-    else {
-        tmp->link = head->link;
-        head->link = tmp;
-    }
+    tmp->link = head->link;
+    head->link = tmp;
     return head;
 }
 
-ListNode* insert_last(ListNode* head, element value) {
-    ListNode* tmp = (ListNode*)malloc(sizeof(ListNode*));
-    tmp->data = value;
+ListNode* insert_last(ListNode* head, element item) {
+    ListNode* tmp = (ListNode*)malloc(sizeof(ListNode));
+    tmp->data = item;
     if (head == NULL) {
-        head = tmp;
-        tmp->link = head;
+        tmp->link = tmp;
+        return tmp;
     }
-    else {
-        tmp->link = head->link;
-        head->link = tmp;
-        head = tmp;             //firtst 와 last 함수의 차이점은 이 한 줄
-    }
+    tmp->link = head->link;
+    head->link = tmp;
+    head = tmp;
     return head;
 }
 
 void print_list(ListNode* head) {
-    if (head == NULL) return;
-    ListNode* tmp = head->link;
+    ListNode* tmp = head->link; // head가 사실은 마지막이니까!
     do {
         printf("%d ->", tmp->data);
         tmp = tmp->link;
     } while (tmp != head);
-    printf("%d", tmp->data);    // 헤드 노드 출력
+    printf("%d\n", tmp->data);
 }
 
 
-int main(void) {
-    ListNode* head = NULL;
-    head = insert_last(head, 1);
-    head = insert_last(head, 2);
-    head = insert_first(head, 3);
-    head = insert_first(head, 4);
+ListNode* delete_first(ListNode* list) {
+    ListNode* removed = list->link;
+    list->link = list->link->link;
+    free(removed);
+    return list;
+}
 
-    print_list(head);
+ListNode* delete_last(ListNode* list) {
+    ListNode* removed = list;
+    ListNode* tmp = list->link;
+    while (tmp->link != list) {
+        tmp = tmp->link;
+    }
+    tmp->link = list->link;
+    free(removed);
+    return tmp;
+}
+
+int main(void) {
+    ListNode* list = NULL;
+    list = insert_first(list, 1);
+    list = insert_first(list, 2);
+    list = insert_first(list, 3);
+    list = insert_first(list, 4);
+    print_list(list);
+
+
+    list = insert_last(list, 4);
+    list = insert_last(list, 5);
+    list = insert_last(list, 6);
+    print_list(list);
+
+    list = delete_last(list);
+    list = delete_last(list);
+    print_list(list);
+
+
+
+    list = delete_first(list);
+    list = delete_first(list);
+    print_list(list);
+    free(list);
     return 0;
 }
