@@ -31,13 +31,14 @@ TreeNode* search(TreeNode* root, element key) {
         return root;
     }
 }
-
+//
 TreeNode* new_node(element key) {
     TreeNode* tmp = (TreeNode*)malloc(sizeof(TreeNode));
     tmp->data = key;
     tmp->left = tmp->right = NULL;
     return tmp;
 }
+
 
 TreeNode* insert_node(TreeNode* root, element key) {
     
@@ -50,8 +51,10 @@ TreeNode* insert_node(TreeNode* root, element key) {
     }
     return root;
 }
+//
 
 
+//
 TreeNode* get_min_node(TreeNode* root) {
     TreeNode* tmp = root;
     while (tmp->left != NULL) {
@@ -59,6 +62,7 @@ TreeNode* get_min_node(TreeNode* root) {
     }
     return tmp;
 }
+
 
 
 TreeNode* delete_node(TreeNode* root, element key) {
@@ -91,6 +95,9 @@ TreeNode* delete_node(TreeNode* root, element key) {
     }
     return root;
 }
+//
+
+
 
 TreeNode* construct_Tree(int n) {
     int count = 0;
