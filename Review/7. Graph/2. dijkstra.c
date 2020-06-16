@@ -14,9 +14,12 @@
 // value, from the set of vertices 
 // not yet included in shortest 
 // path tree 
-int minDistance(int dist[], int sptSet[])
-{
 
+/*
+현재 노드에서 갈 수 있는 가장 작은 가중치를 가진 노드의 인덱스를 반환하는 함수
+*/
+
+int minDistance(int dist[], int sptSet[]) {
     // Initialize min value 
     int min = INT_MAX, min_index;
 
@@ -31,24 +34,23 @@ int minDistance(int dist[], int sptSet[])
 // Function to print shortest 
 // path from source to j 
 // using parent array 
-void printPath(int parent[], int j)
-{
-
-    // Base Case : If j is source 
+void printPath(int parent[], int j) {
     if (parent[j] == -1)
         return;
 
     printPath(parent, parent[j]);
-
+    /*
+    재귀로 다 들어가고 마지막에 더이상 들어갈 게 없을 때 -1을 리턴해서 나오고
+    출력하기 시작하므로 parent 배열에 저장된 경로의 역순으로 출력한다.
+    */
     printf("%d ", j);
 }
+
 
 // A utility function to print  
 // the constructed distance 
 // array 
-int printSolution(int dist[], int n,
-    int parent[])
-{
+int printSolution(int dist[], int n, int parent[]) {
     int src = 0;
     printf("Vertex\t Distance\tPath");
     for (int i = 1; i < n; i++)
@@ -59,80 +61,52 @@ int printSolution(int dist[], int n,
     }
 }
 
-// Funtion that implements Dijkstra's 
-// single source shortest path 
-// algorithm for a graph represented 
-// using adjacency matrix representation 
-void dijkstra(int graph[V][V], int src)
-{
 
-    // The output array. dist[i] 
-    // will hold the shortest 
-    // distance from src to i 
+// dist는 최단 경로를 저장할 배열
+// sptSet은 해당 경로를 갔는지에 대한 체크용 배열
+// parent 는 움직인 노드의 경로를 저장하는 배열
+
+void dijkstra(int graph[V][V], int src) {
+    //재료 초기화
+    
     int dist[V];
-
-    // sptSet[i] will true if vertex 
-    // i is included / in shortest 
-    // path tree or shortest distance  
-    // from src to i is finalized 
     int sptSet[V];
-
-    // Parent array to store 
-    // shortest path tree 
     int parent[V];
 
-    // Initialize all distances as  
-    // INFINITE and stpSet[] as false 
-    for (int i = 0; i < V; i++)
-    {
+    for (int i = 0; i < V; i++){
         parent[0] = -1;
         dist[i] = INT_MAX;
         sptSet[i] = 0;
     }
-
-    // Distance of source vertex  
-    // from itself is always 0 
     dist[src] = 0;
+    
+    
+    //
+    //노드 0~8까지 움직이면서 해당 노드에서 갈 수 있는 제일 가까운 노드의 거리를 추가한다.
 
-    // Find shortest path 
-    // for all vertices 
-    for (int count = 0; count < V - 1; count++)
-    {
-        // Pick the minimum distance 
-        // vertex from the set of 
-        // vertices not yet processed.  
-        // u is always equal to src 
-        // in first iteration. 
+    for (int count = 0; count < V - 1; count++){
         int u = minDistance(dist, sptSet);
-
-        // Mark the picked vertex  
-        // as processed 
         sptSet[u] = 1;
 
-        // Update dist value of the  
-        // adjacent vertices of the 
-        // picked vertex. 
         for (int v = 0; v < V; v++)
-
-            // Update dist[v] only if is 
-            // not in sptSet, there is 
-            // an edge from u to v, and  
-            // total weight of path from 
-            // src to v through u is smaller 
-            // than current value of 
-            // dist[v] 
             if (!sptSet[v] && graph[u][v] &&
                 dist[u] + graph[u][v] < dist[v])
             {
-                parent[v] = u;
+                parent[v] = u;  // 지나온 경로
                 dist[v] = dist[u] + graph[u][v];
             }
     }
+    /*
+    현재 저장된 거리 가중치 값에 새로운 최소 거리값을 더했을 때 기존에 저장되었던 최솟값보다 작으면
+    새로운 값으로 최단 거리를 업데이트 한다.
+    */
 
-    // print the constructed 
-    // distance array 
+
+
+    // 그래프 출력문
     printSolution(dist, V, parent);
 }
+
 
 // Driver Code 
 int main()
